@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nano Banana AI - Generador de Imágenes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <span class="emoji">🍌</span>
+                <h1>Nano Banana AI</h1>
+            </div>
+            <p class="subtitle">Transforma tus fotos con el poder de Google Gemini</p>
+        </header>
+
+        <main class="main-content">
+            <div class="upload-section">
+                <div class="card">
+                    <h2>1. Sube tu foto</h2>
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp" hidden>
+                        <div class="upload-placeholder" id="uploadPlaceholder">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <p>Arrastra una imagen aquí o haz clic para seleccionar</p>
+                            <span class="file-info">JPG, PNG o WEBP (máx. 5MB)</span>
+                        </div>
+                        <div class="preview-container" id="previewContainer" style="display: none;">
+                            <img id="imagePreview" alt="Preview">
+                            <button class="remove-btn" id="removeBtn" title="Quitar imagen">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>2. Describe tu visión</h2>
+                    <textarea 
+                        id="promptInput" 
+                        placeholder="Ejemplo: Conviérteme en un superhéroe volando sobre una ciudad futurista al atardecer, con efectos de luz y energía azul..."
+                        rows="4"
+                    ></textarea>
+                    <div class="prompt-examples">
+                        <p><strong>Ideas:</strong></p>
+                        <button class="example-btn" data-prompt="Conviérteme en un astronauta explorando Marte con traje espacial futurista">🚀 Astronauta</button>
+                        <button class="example-btn" data-prompt="Transfórmame en una pintura al óleo estilo renacentista con fondo de paisaje italiano">🎨 Pintura clásica</button>
+                        <button class="example-btn" data-prompt="Hazme aparecer como personaje de anime en una ciudad cyberpunk con luces de neón">⚡ Anime cyberpunk</button>
+                        <button class="example-btn" data-prompt="Colócame en la portada de una revista de moda en una pasarela con iluminación profesional">📸 Portada de revista</button>
+                    </div>
+                </div>
+
+                <button class="generate-btn" id="generateBtn" disabled>
+                    <span class="btn-text">Generar Imagen</span>
+                    <span class="btn-icon">✨</span>
+                </button>
+            </div>
+
+            <div class="result-section" id="resultSection" style="display: none;">
+                <div class="card result-card">
+                    <h2>Tu creación</h2>
+                    <div class="result-image-container">
+                        <img id="resultImage" alt="Generated Image">
+                    </div>
+                    <div class="result-actions">
+                        <button class="action-btn download-btn" id="downloadBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Descargar
+                        </button>
+                        <button class="action-btn secondary" id="newBtn">
+                            Crear otra
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p>Generando tu imagen mágica con Nano Banana... 🍌✨</p>
+                <small>Esto puede tomar unos segundos</small>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+
+        <footer class="footer">
+            <p>Powered by <strong>Google Gemini 2.5 Flash Image</strong> (Nano Banana) 🍌</p>
+            <p class="small">Desarrollado por Development Factor</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
