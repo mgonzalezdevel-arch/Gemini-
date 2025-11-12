@@ -1,7 +1,9 @@
 // Elementos DOM
-const imageInput = document.getElementById('imageInput');
-const uploadArea = document.getElementById('uploadArea');
-const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+const cameraBtn = document.getElementById('cameraBtn');
+const cameraModal = document.getElementById('cameraModal');
+const cameraVideo = document.getElementById('cameraVideo');
+const captureBtn = document.getElementById('captureBtn');
+const closeCameraBtn = document.getElementById('closeCameraBtn');
 const previewContainer = document.getElementById('previewContainer');
 const imagePreview = document.getElementById('imagePreview');
 const removeBtn = document.getElementById('removeBtn');
@@ -15,37 +17,28 @@ const newBtn = document.getElementById('newBtn');
 const toast = document.getElementById('toast');
 const exampleBtns = document.querySelectorAll('.example-btn');
 
-let selectedFile = null;
+let cameraStream = null;
 
 // Event Listeners
-uploadArea.addEventListener('click', () => imageInput.click());
-imageInput.addEventListener('change', handleFileSelect);
-removeBtn.addEventListener('click', removeImage);
-promptInput.addEventListener('input', checkFormValid);
 generateBtn.addEventListener('click', generateImage);
 downloadBtn.addEventListener('click', downloadImage);
 newBtn.addEventListener('click', resetForm);
-
-// Drag and drop
-uploadArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadArea.classList.add('drag-over');
-});
-
-uploadArea.addEventListener('dragleave', () => {
-    uploadArea.classList.remove('drag-over');
-});
-
-uploadArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadArea.classList.remove('drag-over');
-    
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-        handleFile(file);
-    } else {
-        showToast('Por favor sube una imagen válida', 'error');
+cameraBtn.addEventListener('click', async () => {
+    cameraModal.style.display = 'block';
+    try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        cameraVideo.srcObject = cameraStream;
+    } catch (err) {
+        alert('No se pudo acceder a la cámara.');
+        cameraModal.style.display = 'none';
     }
+});
+captureBtn.addEventListener('click', captureImage);
+closeCameraBtn.addEventListener('click', closeCamera);
+removeBtn.addEventListener('click', () => {
+    imagePreview.src = '';
+    previewContainer.style.display = 'none';
+    checkFormValid();
 });
 
 // Botones de ejemplo
@@ -58,67 +51,74 @@ exampleBtns.forEach(btn => {
 });
 
 // Funciones
-function handleFileSelect(e) {
-    const file = e.target.files[0];
-    if (file) {
-        handleFile(file);
+function dataURLtoFile(dataurl, filename) {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
     }
-}
-
-function handleFile(file) {
-    // Validar tipo
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!validTypes.includes(file.type)) {
-        showToast('Solo se permiten archivos JPG, PNG o WEBP', 'error');
-        return;
-    }
-
-    // Validar tamaño (5MB)
-    if (file.size > 5 * 1024 * 1024) {
-        showToast('La imagen debe ser menor a 5MB', 'error');
-        return;
-    }
-
-    selectedFile = file;
-
-    // Mostrar preview
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        imagePreview.src = e.target.result;
-        uploadPlaceholder.style.display = 'none';
-        previewContainer.style.display = 'block';
-        checkFormValid();
-    };
-    reader.readAsDataURL(file);
-}
-
-function removeImage(e) {
-    e.stopPropagation();
-    selectedFile = null;
-    imageInput.value = '';
-    uploadPlaceholder.style.display = 'block';
-    previewContainer.style.display = 'none';
-    checkFormValid();
+    return new File([u8arr], filename, { type: mime });
 }
 
 function checkFormValid() {
-    const hasImage = selectedFile !== null;
+    // Verifica si hay imagen en el preview y texto en el prompt
+    const hasImage = imagePreview.src && imagePreview.src.startsWith('data:image');
     const hasPrompt = promptInput.value.trim().length > 0;
     generateBtn.disabled = !(hasImage && hasPrompt);
 }
 
+// Actualiza el preview y validación al capturar imagen
+function captureImage() {
+    const canvas = document.createElement('canvas');
+    canvas.width = cameraVideo.videoWidth;
+    canvas.height = cameraVideo.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(cameraVideo, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL('image/png');
+    imagePreview.src = dataUrl;
+    previewContainer.style.display = 'block';
+    cameraModal.style.display = 'none';
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+    // Asegura que se valide el formulario después de capturar
+    checkFormValid();
+}
+
+// Quitar imagen capturada
+removeBtn.addEventListener('click', () => {
+    imagePreview.src = '';
+    previewContainer.style.display = 'none';
+    checkFormValid();
+});
+
+// Actualiza validación al escribir en el prompt
+promptInput.addEventListener('input', checkFormValid);
+
+// Generar imagen usando la imagen capturada (base64)
 async function generateImage() {
-    if (!selectedFile || !promptInput.value.trim()) {
-        showToast('Por favor completa todos los campos', 'error');
+    if (!imagePreview.src || !imagePreview.src.startsWith('data:image')) {
+        showToast('La imagen es requerida', 'error');
+        imagePreview.classList.add('required');
+        setTimeout(() => imagePreview.classList.remove('required'), 1500);
+        return;
+    }
+    if (!promptInput.value.trim()) {
+        showToast('Por favor describe tu visión', 'error');
         return;
     }
 
-    // Mostrar loading
     loadingOverlay.style.display = 'flex';
 
     try {
         const formData = new FormData();
-        formData.append('image', selectedFile);
+        // Convierte el base64 a archivo antes de enviar
+        const file = dataURLtoFile(imagePreview.src, 'captured.png');
+        formData.append('image', file);
         formData.append('prompt', promptInput.value.trim());
 
         const response = await fetch('/api/generate', {
@@ -132,15 +132,10 @@ async function generateImage() {
             throw new Error(data.error || 'Error al generar la imagen');
         }
 
-        // Mostrar resultado
         resultImage.src = data.image;
         resultSection.style.display = 'block';
-        
-        // Scroll al resultado
         resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
         showToast('¡Imagen generada exitosamente! 🎉', 'success');
-
     } catch (error) {
         console.error('Error:', error);
         showToast(error.message || 'Error al generar la imagen', 'error');
@@ -160,10 +155,8 @@ function downloadImage() {
 }
 
 function resetForm() {
-    selectedFile = null;
-    imageInput.value = '';
+    imagePreview.src = '';
     promptInput.value = '';
-    uploadPlaceholder.style.display = 'block';
     previewContainer.style.display = 'none';
     resultSection.style.display = 'none';
     generateBtn.disabled = true;
@@ -182,6 +175,27 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
+// Abrir la cámara
+async function openCamera() {
+    cameraModal.style.display = 'block';
+    try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        cameraVideo.srcObject = cameraStream;
+    } catch (err) {
+        alert('No se pudo acceder a la cámara.');
+        cameraModal.style.display = 'none';
+    }
+}
+
+// Cerrar modal de cámara
+function closeCamera() {
+    cameraModal.style.display = 'none';
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+}
+
 // Verificar salud de la API al cargar
 async function checkApiHealth() {
     try {
@@ -194,6 +208,43 @@ async function checkApiHealth() {
     } catch (error) {
         console.error('Error al verificar la API:', error);
     }
+}
+
+// Función para seleccionar color de piel
+function selectSkin(tonoPiel) {
+    // Remover selección anterior
+    document.querySelectorAll('.skin-option').forEach(option => {
+        option.style.border = '2px solid #e9ecef';
+    });
+    
+    // Marcar opción seleccionada - buscar por el onclick que contiene el tono
+    document.querySelectorAll('.skin-option').forEach(option => {
+        if (option.getAttribute('onclick').includes(tonoPiel)) {
+            option.style.border = '2px solid #434444ff';
+        }
+    });
+    
+    // Guardar selección
+    window.tonoSeleccionado = tonoPiel;
+    
+    // Mostrar botón continuar
+    document.getElementById('continue-photo-button').style.display = 'block';
+}
+
+// Función para abrir directamente la cámara después de seleccionar color de piel
+function abrirCamara() {
+    document.getElementById('skinSelectionContainer').style.display = 'none';
+    document.getElementById('generatorContainer').style.display = 'block';
+    // Abrir modal de cámara automáticamente
+    setTimeout(() => {
+        document.getElementById('cameraBtn').click();
+    }, 100);
+}
+
+// Función para continuar a la sección de foto después de seleccionar color de piel
+function continuarFoto() {
+    document.getElementById('skinSelectionContainer').style.display = 'none';
+    document.getElementById('generatorContainer').style.display = 'block';
 }
 
 // Ejecutar al cargar la página

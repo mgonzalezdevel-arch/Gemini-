@@ -5,32 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nano Banana AI - Generador de Imágenes</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .logo-corner {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .logo-corner img {
+            width: 300px;
+            height: auto;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+        .logo-corner img:hover {
+            opacity: 1;
+        }
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .avatar {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px;
+            border-radius: 50%;
+        }
+        .avatar.selected img {
+           
+            box-shadow: 0 0 15px rgba(67, 68, 68, 0.5);
+            transform: scale(1.05);
+        }
+        .hair-option.selected {
+            background: #434444ff !important;
+            color: white !important;
+            border-color: #434444ff !important;
+        }
+        .skin-option.selected {
+            background: #434444ff !important;
+            border-color: #434444ff !important;
+        }
+        .skin-option.selected span {
+            color: white !important;
+        }
+        .accessory-option.selected {
+            background: #434444ff !important;
+            color: white !important;
+            border-color: #434444ff !important;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <div class="logo">
-                <span class="emoji">🍌</span>
-                <h1>Nano Banana AI</h1>
+    <video autoplay muted loop class="video-background">
+        <source src="img/fondo2.mp4" type="video/mp4">
+    </video>
+    
+    <!-- Logo en esquina -->
+    <div class="logo-corner">
+        <img src="img/DEVELOPMENT_FACTOR.png" alt="Development Factor">
+    </div>
+    
+    <div class="container" id="inicioContainer" style="display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;padding-top:15vh;">
+        <h1 class="title" style="text-align:center;margin-bottom:60px;">¡COMIENZA AQUÍ!</h1>
+        <div class="avatars-container" style="display:flex;justify-content:center;gap:40px;margin-bottom:30px;">
+            <div class="avatar" onclick="selectGender('masculino')" id="avatar-masculino" 
+                 onmouseenter="changeAvatarImage('masculino', true)" 
+                 onmouseleave="changeAvatarImage('masculino', false)">
+                <img src="img/Hombre.jpg" alt="Avatar Masculino" id="img-masculino" style="width:180px;height:180px;border-radius:50%;object-fit:cover;transition:all 0.3s ease;border:3px solid transparent;">
             </div>
-            <p class="subtitle">Transforma tus fotos con el poder de Google Gemini</p>
-        </header>
-
-        <main class="main-content">
+            <div class="avatar" onclick="selectGender('femenino')" id="avatar-femenino" 
+                 onmouseenter="changeAvatarImage('femenino', true)" 
+                 onmouseleave="changeAvatarImage('femenino', false)">
+                <img src="img/Mujer.jpg" alt="Avatar Femenino" id="img-femenino" style="width:180px;height:180px;border-radius:50%;object-fit:cover;transition:all 0.3s ease;border:3px solid transparent;">
+            </div>
+        </div>
+        <p class="gender-text" style="text-align:center;">Elige tu género</p>
+        <div id="next-button" style="display: none; margin-top: 20px;">
+            <button onclick="continuar()" style="background: #898a8aff; color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: background 0.3s ease;">
+                Continuar
+            </button>
+        </div>
+    </div>
+    <div class="container" id="mainContainer" style="display:none;">
+        <div class="name-section" id="name-section" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(255,255,255,0.9); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); min-width: 400px;">
+            <h2 style="color: #666; font-size: 1.5rem; margin-bottom: 20px;">¿Cuál es tu nombre?</h2>
+            <input type="text" id="user-name" placeholder="Escribe tu nombre aquí" style="width: 300px; padding: 15px; border: 2px solid #ccc; border-radius: 25px; font-size: 1.2rem; text-align: center; margin-bottom: 20px; outline: none; transition: border-color 0.3s ease;" onfocus="this.style.borderColor='#434444ff'" onblur="this.style.borderColor='#ccc'">
+            <br>
+            <button onclick="continuarPersonalizacion()" style="background: #434444ff; color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: background 0.3s ease; margin-top: 10px;">
+                Continuar
+            </button>
+        </div>
+        
+        <div class="customization-section" id="customization-section" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(255,255,255,0.9); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); min-width: 600px; max-height: 80vh; overflow-y: auto;">
+           
+            
+            <!-- Selección de accesorios -->
+            <div id="skin-selection" style="margin-bottom: 30px;">
+                <h3 style="color: #666; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; justify-content: center;">
+                    <span style="margin-right: 10px;"></span> SELECCIONA ACCESORIOS
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; max-width: 600px; margin: 0 auto;">
+                    <div class="accessory-option" onclick="selectAccessory('viajar')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Viajar
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('ejercicio')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Hacer ejercicio
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('mascota')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Adoptar una mascota
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('idioma')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Aprender un idioma
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('amor')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Encontrar el amor
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('suerte')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Tener buena suerte
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('batman')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Ser Batman
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('carro')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Cambiar de carro
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('conciertos')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Ir a conciertos
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('instrumento')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Tocar un instrumento
+                    </div>
+                    <div class="accessory-option" onclick="selectAccessory('organizado')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
+                        Ser más organizado
+                    </div>
+                </div>
+                
+                <button onclick="continuarGenerador()" id="continue-photo-button" style="background: #434444ff; color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: background 0.3s ease; margin-top: 20px; display: none;">
+                    ¡Crear mi figura!
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="container" id="generatorContainer" style="display:none;">
+        <main class="main-content" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(255,255,255,0.9); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); min-width: 400px;">
             <div class="upload-section">
-                <div class="card">
-                    <h2>1. Sube tu foto</h2>
+                <div class="card" style="background: transparent; box-shadow: none; padding: 0;">
+                    
                     <div class="upload-area" id="uploadArea">
-                        <input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp" hidden>
-                        <div class="upload-placeholder" id="uploadPlaceholder">
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="17 8 12 3 7 8"></polyline>
-                                <line x1="12" y1="3" x2="12" y2="15"></line>
-                            </svg>
-                            <p>Arrastra una imagen aquí o haz clic para seleccionar</p>
-                            <span class="file-info">JPG, PNG o WEBP (máx. 5MB)</span>
-                        </div>
+                    
+                        <button class="camera-btn" id="cameraBtn" type="button">
+        📷 Usar cámara
+    </button>
                         <div class="preview-container" id="previewContainer" style="display: none;">
                             <img id="imagePreview" alt="Preview">
                             <button class="remove-btn" id="removeBtn" title="Quitar imagen">
@@ -43,25 +173,10 @@
                     </div>
                 </div>
 
-                <div class="card">
-                    <h2>2. Describe tu visión</h2>
-                    <textarea 
-                        id="promptInput" 
-                        placeholder="Ejemplo: Conviérteme en un superhéroe volando sobre una ciudad futurista al atardecer, con efectos de luz y energía azul..."
-                        rows="4"
-                    ></textarea>
-                    <div class="prompt-examples">
-                        <p><strong>Ideas:</strong></p>
-                        <button class="example-btn" data-prompt="Conviérteme en un astronauta explorando Marte con traje espacial futurista">🚀 Astronauta</button>
-                        <button class="example-btn" data-prompt="Transfórmame en una pintura al óleo estilo renacentista con fondo de paisaje italiano">🎨 Pintura clásica</button>
-                        <button class="example-btn" data-prompt="Hazme aparecer como personaje de anime en una ciudad cyberpunk con luces de neón">⚡ Anime cyberpunk</button>
-                        <button class="example-btn" data-prompt="Colócame en la portada de una revista de moda en una pasarela con iluminación profesional">📸 Portada de revista</button>
-                    </div>
-                </div>
 
-                <button class="generate-btn" id="generateBtn" disabled>
+                <button class="generate-btn" id="generateBtn" disabled style=" margin-top: 25px;">
                     <span class="btn-text">Generar Imagen</span>
-                    <span class="btn-icon">✨</span>
+                   
                 </button>
             </div>
 
@@ -80,7 +195,7 @@
                             </svg>
                             Descargar
                         </button>
-                        <button class="action-btn secondary" id="newBtn">
+                        <button class="action-btn secondary" id="newBtn" onclick="reiniciarProceso()">
                             Crear otra
                         </button>
                     </div>
@@ -89,21 +204,235 @@
         </main>
 
         <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-            <div class="loading-content">
-                <div class="spinner"></div>
-                <p>Generando tu imagen mágica con Nano Banana... 🍌✨</p>
-                <small>Esto puede tomar unos segundos</small>
-            </div>
+           
         </div>
 
         <div class="toast" id="toast"></div>
 
-        <footer class="footer">
-            <p>Powered by <strong>Google Gemini 2.5 Flash Image</strong> (Nano Banana) 🍌</p>
-            <p class="small">Desarrollado por Development Factor</p>
-        </footer>
+       
     </div>
 
+    <!-- Modal de cámara -->
+<div class="camera-modal" id="cameraModal" style="display: none;">
+    <div class="camera-content">
+        <video id="cameraVideo" autoplay playsinline></video>
+        <button id="captureBtn">Capturar foto</button>
+        <button id="closeCameraBtn">Cerrar</button>
+    </div>
+</div>
+
     <script src="app.js"></script>
+    <script>
+        function changeAvatarImage(genero, isHover) {
+            const imgElement = document.getElementById('img-' + genero);
+            const isSelected = document.getElementById('avatar-' + genero).classList.contains('selected');
+            
+            if (genero === 'masculino') {
+                if (isHover || isSelected) {
+                    imgElement.src = 'img/Hombre-1.jpg';
+                } else {
+                    imgElement.src = 'img/Hombre.jpg';
+                }
+            } else if (genero === 'femenino') {
+                if (isHover || isSelected) {
+                    imgElement.src = 'img/Mujer-1.jpg';
+                } else {
+                    imgElement.src = 'img/Mujer.jpg';
+                }
+            }
+        }
+
+        function selectGender(genero) {
+            // Marcar avatar seleccionado
+            document.getElementById('avatar-masculino').classList.remove('selected');
+            document.getElementById('avatar-femenino').classList.remove('selected');
+            
+            // Restablecer imágenes a estado normal
+            document.getElementById('img-masculino').src = 'img/Hombre.jpg';
+            document.getElementById('img-femenino').src = 'img/Mujer.jpg';
+            
+            // Marcar nuevo avatar seleccionado y cambiar su imagen
+            document.getElementById('avatar-' + genero).classList.add('selected');
+            changeAvatarImage(genero, false);
+            
+            window.sexoSeleccionado = genero;
+            document.getElementById('next-button').style.display = 'block';
+        }
+        
+        function continuar() {
+            document.getElementById('inicioContainer').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            document.getElementById('name-section').style.display = 'block';
+        }
+        
+        function continuarPersonalizacion() {
+            // Validar nombre
+            var nombre = document.getElementById('user-name').value.trim();
+            if (!nombre) {
+                alert('Por favor, ingresa tu nombre');
+                return;
+            }
+            window.nombreUsuario = nombre;
+            document.getElementById('name-section').style.display = 'none';
+            document.getElementById('customization-section').style.display = 'block';
+        }
+        
+        function selectAccessory(accessory) {
+            if (!window.accesoriosSeleccionados) {
+                window.accesoriosSeleccionados = [];
+            }
+            
+            // Toggle selección del accesorio
+            const element = event.target;
+            const isSelected = element.classList.contains('selected');
+            
+            if (isSelected) {
+                element.classList.remove('selected');
+                const index = window.accesoriosSeleccionados.indexOf(accessory);
+                if (index > -1) {
+                    window.accesoriosSeleccionados.splice(index, 1);
+                }
+            } else {
+                // Verificar si ya se han seleccionado 5 accesorios
+                if (window.accesoriosSeleccionados.length >= 5) {
+                    alert('Puedes seleccionar máximo 5 accesorios');
+                    return;
+                }
+                element.classList.add('selected');
+                window.accesoriosSeleccionados.push(accessory);
+            }
+            
+            // Mostrar botón si al menos un accesorio está seleccionado
+            if (window.accesoriosSeleccionados.length > 0) {
+                document.getElementById('continue-photo-button').style.display = 'inline-block';
+            } else {
+                document.getElementById('continue-photo-button').style.display = 'none';
+            }
+        }
+        
+        function continuarGenerador() {
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('generatorContainer').style.display = 'block';
+            
+            // Construir el prompt con los valores seleccionados
+            const nombre = window.nombreUsuario || 'Usuario';
+            const genero = window.sexoSeleccionado || 'masculino';
+            const accesorios = window.accesoriosSeleccionados && window.accesoriosSeleccionados.length > 0 
+                ? window.accesoriosSeleccionados.join(', ') 
+                : 'ningún accesorio';
+            
+            const promptCompleto = `Crea una figura de acción de cuerpo completo con la persona de la foto con vestimenta de año nuevo, en su caja original con ventana. La figura es como se muestra en la foto, ${genero}. En la parte superior, pon ${nombre} con 2026 debajo. Utiliza el color negro con detalles en dorado para la caja. Incluye , como únicos accesorios, ${accesorios} ordenados cuidadosamente a la derecha, proporcionales al modelo y colocados en ranuras empotradas con el modelo. Diseña en estilo realista, pareciendo una persona real con iluminación suave y un diseño claro, como un producto de tienda de juguetes. La caja esta sobre una mesa de madera, dentro de una casa cálida con ambientación navideña`;
+            
+            const promptInput = document.getElementById('promptInput');
+            promptInput.value = promptCompleto;
+        }
+        
+        function continuarFoto() {
+            document.getElementById('customization-section').style.display = 'none';
+            document.getElementById('camera-section').style.display = 'block';
+        }
+        function finalizar() {
+            // Validar que se haya tomado la foto
+            var photoTaken = document.getElementById('captured-photo').src && document.getElementById('captured-photo').src.startsWith('data:image');
+            if (!photoTaken) {
+                alert('Por favor, toma tu foto primero');
+                return;
+            }
+            // Oculta todo y muestra el generador de imagen
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('generatorContainer').style.display = 'block';
+            // Opcional: puedes pasar los datos seleccionados al generador si lo necesitas
+        }
+        function startCamera() {
+            const video = document.getElementById('video');
+            // Detener stream anterior si existe
+            if (window.stream && window.stream.getTracks) {
+                window.stream.getTracks().forEach(track => track.stop());
+            }
+            navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+                .then(function(stream) {
+                    window.stream = stream;
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    document.getElementById('take-photo-btn').style.display = 'inline-block';
+                    document.getElementById('start-camera-btn').style.display = 'none';
+                })
+                .catch(function(err) {
+                    alert('No se pudo acceder a la cámara: ' + err.message);
+                });
+        }
+
+        function takePhoto() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            // Asegura que el canvas tenga el mismo tamaño que el video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Dibuja el frame actual del video en el canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convierte el canvas a imagen base64 y lo guarda
+            const dataUrl = canvas.toDataURL('image/png');
+            window.capturedPhotoData = dataUrl;
+
+            // Detiene el stream de la cámara
+            if (window.stream && window.stream.getTracks) {
+                window.stream.getTracks().forEach(track => track.stop());
+                window.stream = null;
+            }
+
+            // Ir directamente al generador
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('generatorContainer').style.display = 'block';
+        }
+
+        function retakePhoto() {
+            document.getElementById('video').style.display = 'block';
+            document.getElementById('start-camera-btn').style.display = 'inline-block';
+            document.getElementById('take-photo-btn').style.display = 'none';
+        }
+
+        function reiniciarProceso() {
+            // Ocultar todas las secciones
+            document.getElementById('generatorContainer').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            
+            // Limpiar selecciones
+            document.getElementById('avatar-masculino').classList.remove('selected');
+            document.getElementById('avatar-femenino').classList.remove('selected');
+            document.getElementById('img-masculino').src = 'img/Hombre.jpg';
+            document.getElementById('img-femenino').src = 'img/Mujer.jpg';
+            document.getElementById('next-button').style.display = 'none';
+            
+            // Limpiar campos
+            document.getElementById('user-name').value = '';
+            
+            // Limpiar selecciones de cabello y accesorios
+            document.querySelectorAll('.accessory-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Ocultar botones de continuar
+            document.getElementById('continue-photo-button').style.display = 'none';
+            
+            // Resetear secciones
+            document.getElementById('name-section').style.display = 'none';
+            document.getElementById('customization-section').style.display = 'none';
+            
+            // Limpiar variables globales
+            window.sexoSeleccionado = null;
+            window.nombreUsuario = null;
+            window.cabelloSeleccionado = null;
+            window.tonoSeleccionado = null;
+            window.accesoriosSeleccionados = [];
+            
+            // Mostrar pantalla inicial
+            document.getElementById('inicioContainer').style.display = 'flex';
+        }
+    </script>
 </body>
 </html>
