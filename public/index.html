@@ -6,6 +6,119 @@
     <title>Development Factor - Generador de Imágenes</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* Estilos para botón de cámara */
+        .camera-btn {
+            background: linear-gradient(135deg, #e55319 0%, #e55319 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px auto;
+            min-width: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .camera-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+            background: #194875;
+        }
+        
+        .camera-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .camera-btn svg {
+            transition: transform 0.3s ease;
+        }
+        
+        .camera-btn:hover svg {
+            transform: scale(1.1);
+        }
+        
+        .camera-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .camera-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Estilos para botón de generar imagen */
+        .generate-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 25px auto;
+            min-width: 220px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .generate-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(40, 167, 69, 0.4);
+            background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+        }
+        
+        .generate-btn:active:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+        
+        .generate-btn:disabled {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            cursor: not-allowed;
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.2);
+            transform: none;
+        }
+        
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+        
+        .generate-btn:hover:not(:disabled)::before {
+            left: 100%;
+        }
+        
         /*  loader    */
         
         /* From uiverse.io by @JulioCodesSM */
@@ -419,6 +532,7 @@
         .card {
             box-sizing: border-box !important;
             width: 100% !important;
+          
         }
         
         .preview-container img, .result-image-container img {
@@ -554,8 +668,12 @@
                     <div class="upload-area" id="uploadArea">
                     
                         <button class="camera-btn" id="cameraBtn" type="button">
-        📷 Usar cámara
-    </button>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            Usar cámara
+                        </button>
                         <div class="preview-container" id="previewContainer" style="display: none;">
                             <img id="imagePreview" alt="Preview">
                             <button class="remove-btn" id="removeBtn" title="Quitar imagen">
