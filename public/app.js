@@ -150,8 +150,11 @@ function downloadImage() {
     const dia = String(fecha.getDate()).padStart(2, '0');
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');
     const año = fecha.getFullYear();
+    const hora = String(fecha.getHours()).padStart(2, '0');
+    const minuto = String(fecha.getMinutes()).padStart(2, '0');
+    const segundo = String(fecha.getSeconds()).padStart(2, '0');
     const nombreLimpio = nombre.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ]/g, '_');
-    const nombreArchivo = `Figura_${nombreLimpio}_AñoNuevo_2026_${dia}-${mes}-${año}.png`;
+    const nombreArchivo = `Figura_${nombreLimpio}_AñoNuevo_2026_${dia}-${mes}-${año}_${hora}-${minuto}-${segundo}.png`;
     
     const link = document.createElement('a');
     link.href = resultImage.src;
