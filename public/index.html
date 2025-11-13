@@ -856,11 +856,14 @@
             const dia = String(fecha.getDate()).padStart(2, '0');
             const mes = String(fecha.getMonth() + 1).padStart(2, '0');
             const año = fecha.getFullYear();
+            const hora = String(fecha.getHours()).padStart(2, '0');
+            const minuto = String(fecha.getMinutes()).padStart(2, '0');
+            const segundo = String(fecha.getSeconds()).padStart(2, '0');
             
             // Limpiar nombre del usuario (remover caracteres especiales)
             const nombreLimpio = nombre.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ]/g, '_');
             
-            return `Figura_${nombreLimpio}_AñoNuevo_2026_${dia}-${mes}-${año}.png`;
+            return `Figura_${nombreLimpio}_AñoNuevo_2026_${dia}-${mes}-${año}_${hora}-${minuto}-${segundo}.png`;
         }
         
         // Función para descargar la imagen con nombre personalizado
