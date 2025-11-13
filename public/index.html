@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nano Banana AI - Generador de Imágenes</title>
+    <title>Development Factor - Generador de Imágenes</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .logo-corner {
@@ -84,11 +84,12 @@
             }
             
             #inicioContainer {
-                padding-top: 10vh !important;
-                padding: 20px;
+                padding-top: 25vh !important;
+                padding-left: 20px !important;
+                padding-right: 20px !important;
             }
             
-            .name-section, .customization-section, .main-content {
+            .name-section, .customization-section {
                 min-width: 90% !important;
                 max-width: 95% !important;
                 padding: 20px !important;
@@ -97,11 +98,28 @@
                 top: 50% !important;
                 left: 50% !important;
                 transform: translate(-50%, -50%) !important;
-            }
-            
-            .customization-section {
                 max-height: 90vh !important;
                 overflow-y: auto !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* Ajustes específicos para el generador en móvil */
+            #generatorContainer .main-content {
+                width: 95% !important;
+                max-width: 95% !important;
+                min-width: unset !important;
+                max-height: 80vh !important;
+                padding: 15px !important;
+                box-sizing: border-box !important;
+            }
+            
+            .camera-btn, .generate-btn {
+                padding: 12px 20px !important;
+                font-size: 0.9rem !important;
+                margin: 8px 0 !important;
+                width: 100% !important;
+                max-width: 200px !important;
+                box-sizing: border-box !important;
             }
             
             #user-name {
@@ -149,23 +167,45 @@
                 height: 100px !important;
             }
             
-            .name-section, .customization-section, .main-content {
+            #inicioContainer {
+                padding-top: 30vh !important;
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+            }
+            
+            .name-section, .customization-section {
                 min-width: 95% !important;
+                max-width: 98% !important;
                 padding: 15px !important;
+                max-height: 95vh !important;
+                overflow-y: auto !important;
+                box-sizing: border-box !important;
             }
             
-            #user-name {
-                width: 200px !important;
-            }
-            
-            .accessory-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 8px !important;
-            }
-            
-            .accessory-option {
+            /* Ajustes específicos para el generador en móvil pequeño */
+            #generatorContainer .main-content {
+                width: 98% !important;
+                max-width: 98% !important;
+                min-width: unset !important;
+                max-height: 85vh !important;
                 padding: 10px !important;
-                font-size: 0.75rem !important;
+                box-sizing: border-box !important;
+                margin: 0 !important;
+            }
+            
+            .camera-btn, .generate-btn {
+                padding: 10px 15px !important;
+                font-size: 0.8rem !important;
+                margin: 5px 0 !important;
+                width: 100% !important;
+                max-width: 180px !important;
+                box-sizing: border-box !important;
+            }
+            
+            .result-image-container img {
+                max-width: 100% !important;
+                height: auto !important;
+                max-height: 40vh !important;
             }
             
             h2 {
@@ -205,16 +245,80 @@
         /* Ajustes para orientación landscape en móviles */
         @media (max-height: 500px) and (orientation: landscape) {
             #inicioContainer {
-                padding-top: 5vh !important;
+                padding-top: 15vh !important;
             }
             
             .name-section, .customization-section {
-                max-height: 95vh !important;
+                max-height: 90vh !important;
                 overflow-y: auto !important;
+            }
+            
+            #generatorContainer .main-content {
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+                width: 90% !important;
+                padding: 8px !important;
             }
             
             .title {
                 margin-bottom: 20px !important;
+                font-size: 1.3rem !important;
+            }
+        }
+        
+        /* Ajuste especial para pantallas muy pequeñas */
+        @media (max-height: 600px) {
+            #inicioContainer {
+                padding-top: 20vh !important;
+            }
+            
+            .name-section, .customization-section {
+                max-height: 85vh !important;
+                overflow-y: auto !important;
+            }
+            
+            #generatorContainer .main-content {
+                max-height: 85vh !important;
+                overflow-y: auto !important;
+                padding: 8px !important;
+            }
+        }
+        
+        /* Estilos adicionales para prevenir overflow */
+        .upload-section, .result-section {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        .card {
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }
+        
+        .preview-container img, .result-image-container img {
+            max-width: 100% !important;
+            height: auto !important;
+            box-sizing: border-box !important;
+        }
+        
+        @media (max-width: 768px) {
+            .preview-container img {
+                max-height: 25vh !important;
+            }
+            
+            .result-image-container img {
+                max-height: 30vh !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .preview-container img {
+                max-height: 20vh !important;
+            }
+            
+            .result-image-container img {
+                max-height: 25vh !important;
             }
         }
     </style>
@@ -264,9 +368,17 @@
             
             <!-- Selección de accesorios -->
             <div id="skin-selection" style="margin-bottom: 30px;">
-                <h3 style="color: #666; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; justify-content: center;">
-                    <span style="margin-right: 10px;"></span> SELECCIONA ACCESORIOS
+                <h3 style="color: #666; font-size: 1.2rem; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+                   DESEOS DE AÑO NUEVO
                 </h3>
+                <p style="color: #888; font-size: 0.9rem; margin-bottom: 15px; text-align: center;">
+                    Selecciona de 1 a 5 deseos para tu figura de año nuevo
+                </p>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <span style="background: #434444ff; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">
+                        Seleccionados: <span id="contador-accesorios">0</span>/5
+                    </span>
+                </div>
                 <div class="accessory-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; max-width: 600px; margin: 0 auto;">
                     <div class="accessory-option" onclick="selectAccessory('viajar')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
                         Viajar
@@ -310,7 +422,7 @@
         </div>
     </div>
     <div class="container" id="generatorContainer" style="display:none;">
-        <main class="main-content" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(255,255,255,0.9); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); min-width: 400px;">
+        <main class="main-content" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-sizing: border-box;">
             <div class="upload-section">
                 <div class="card" style="background: transparent; box-shadow: none; padding: 0;">
                     
@@ -349,7 +461,7 @@
                         <img id="resultImage" alt="Generated Image">
                     </div>
                     <div class="result-actions">
-                        <button class="action-btn download-btn" id="downloadBtn">
+                        <button class="action-btn download-btn" id="downloadBtn" onclick="descargarImagen()">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="7 10 12 15 17 10"></polyline>
@@ -457,11 +569,17 @@
             } else {
                 // Verificar si ya se han seleccionado 5 accesorios
                 if (window.accesoriosSeleccionados.length >= 5) {
-                    alert('Puedes seleccionar máximo 5 accesorios');
+                    alert('Puedes seleccionar máximo 5 deseos de año nuevo');
                     return;
                 }
                 element.classList.add('selected');
                 window.accesoriosSeleccionados.push(accessory);
+            }
+            
+            // Actualizar contador
+            const contador = document.getElementById('contador-accesorios');
+            if (contador) {
+                contador.textContent = window.accesoriosSeleccionados.length;
             }
             
             // Mostrar botón si al menos un accesorio está seleccionado
@@ -483,7 +601,11 @@
                 ? window.accesoriosSeleccionados.join(', ') 
                 : 'ningún accesorio';
             
-            const promptCompleto = `Crea una figura de acción de cuerpo completo con la persona de la foto con vestimenta de año nuevo, en su caja original con ventana. La figura es como se muestra en la foto, ${genero}. En la parte superior, pon ${nombre} con 2026 debajo. Utiliza el color negro con detalles en dorado para la caja. Incluye , como únicos accesorios, ${accesorios} ordenados cuidadosamente a la derecha, proporcionales al modelo y colocados en ranuras empotradas con el modelo. Diseña en estilo realista, pareciendo una persona real con iluminación suave y un diseño claro, como un producto de tienda de juguetes. La caja esta sobre una mesa de madera, dentro de una casa cálida con ambientación navideña`;
+            const promptCompleto = `Crea una figura de acción de cuerpo completo con la persona de la foto con vestimenta de año nuevo, en su caja original con ventana. 
+            La figura es como se muestra en la foto, ${genero}. En la parte superior, pon ${nombre} con 2026 debajo. Utiliza el color negro con detalles en dorado para la caja.
+             Incluye , como únicos accesorios, ${accesorios} ordenados cuidadosamente a la derecha, proporcionales al modelo y colocados en ranuras empotradas con el modelo. 
+             Diseña en estilo realista, pareciendo una persona real con iluminación suave y un diseño claro, como un producto de tienda de juguetes. 
+             La caja esta sobre una mesa de madera, dentro de una casa cálida con ambientación navideña`;
             
             const promptInput = document.getElementById('promptInput');
             promptInput.value = promptCompleto;
@@ -578,6 +700,12 @@
                 option.classList.remove('selected');
             });
             
+            // Reiniciar contador
+            const contador = document.getElementById('contador-accesorios');
+            if (contador) {
+                contador.textContent = '0';
+            }
+            
             // Ocultar botones de continuar
             document.getElementById('continue-photo-button').style.display = 'none';
             
@@ -594,6 +722,82 @@
             
             // Mostrar pantalla inicial
             document.getElementById('inicioContainer').style.display = 'flex';
+        }
+        
+        // Función para generar nombre de archivo personalizado
+        function generarNombreArchivo() {
+            const nombre = window.nombreUsuario || 'Usuario';
+            const fecha = new Date();
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const año = fecha.getFullYear();
+            
+            // Limpiar nombre del usuario (remover caracteres especiales)
+            const nombreLimpio = nombre.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ]/g, '_');
+            
+            return `Figura_${nombreLimpio}_2026_${dia}-${mes}-${año}.png`;
+        }
+        
+        // Función para descargar la imagen con nombre personalizado
+        function descargarImagen() {
+            const imgElement = document.getElementById('resultImage');
+            if (!imgElement || !imgElement.src) {
+                alert('No hay imagen para descargar');
+                return;
+            }
+            
+            // Crear un canvas temporal para convertir la imagen
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Crear una nueva imagen para cargar la imagen resultado
+            const img = new Image();
+            img.crossOrigin = 'anonymous'; // Para evitar problemas de CORS
+            
+            img.onload = function() {
+                // Establecer el tamaño del canvas igual a la imagen
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                // Dibujar la imagen en el canvas
+                ctx.drawImage(img, 0, 0);
+                
+                // Convertir canvas a blob y descargar
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = generarNombreArchivo();
+                    
+                    // Agregar el link al DOM temporalmente y hacer click
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Limpiar URL temporal
+                    URL.revokeObjectURL(url);
+                }, 'image/png');
+            };
+            
+            img.onerror = function() {
+                // Si hay error cargando la imagen, usar método alternativo
+                descargarImagenAlternativo();
+            };
+            
+            // Cargar la imagen
+            img.src = imgElement.src;
+        }
+        
+        // Método alternativo de descarga (si el principal falla)
+        function descargarImagenAlternativo() {
+            const imgElement = document.getElementById('resultImage');
+            const link = document.createElement('a');
+            link.href = imgElement.src;
+            link.download = generarNombreArchivo();
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
