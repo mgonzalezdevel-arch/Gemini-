@@ -6,6 +6,57 @@
     <title>Development Factor - Generador de Imágenes</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /*  loader    */
+        
+        /* From uiverse.io by @JulioCodesSM */
+.loader {
+ width: 50px;
+ height: 50px;
+ position: relative;
+ transform: translateX(-25px);
+ /* Compensating for the left of 50px in the keyframe. */
+}
+
+.loader::before,
+.loader::after {
+ content: '';
+ position: absolute;
+ width: inherit;
+ height: inherit;
+ border-radius: 50%;
+ mix-blend-mode: multiply;
+ animation: rotate9 1s infinite cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.loader::before {
+ background-color: #e55319;
+}
+
+.loader::after {
+ background-color: #194875;
+ animation-delay: .5s;
+}
+
+@keyframes rotate9 {
+ 0%,100% {
+  left: 50px;
+ }
+
+ 25% {
+  transform: scale(.3);
+ }
+
+ 50% {
+  left: 0;
+ }
+
+ 75% {
+  transform: scale(1);
+ }
+}
+        
+        
+        /*  loader    */
         .logo-corner {
             position: fixed;
             top: 20px;
@@ -308,7 +359,9 @@
             }
             
             .result-image-container img {
-                max-height: 30vh !important;
+                max-height: 50vh !important;
+                max-width: 100% !important;
+                object-fit: contain !important;
             }
         }
         
@@ -318,7 +371,83 @@
             }
             
             .result-image-container img {
-                max-height: 25vh !important;
+                max-height: 45vh !important;
+                max-width: 100% !important;
+                object-fit: contain !important;
+            }
+        }
+        
+        /* Estilos específicos para la imagen de resultado */
+        .result-image-container {
+            width: 100% !important;
+            max-width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            overflow: hidden !important;
+            margin: 10px 0 !important;
+        }
+        
+        .result-image-container img {
+            max-width: 100% !important;
+            max-height: 60vh !important;
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important;
+            border-radius: 8px !important;
+        }
+        
+        /* Ajustes para la sección de resultados */
+        .result-section {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+        
+        .result-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        
+        /* Estilos adicionales para el overlay del loader */
+        .loading-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.8) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            z-index: 9999 !important;
+        }
+        
+        /* Ajustes responsivos para el loader */
+        @media (max-width: 768px) {
+            .loader {
+                width: 40px !important;
+                height: 40px !important;
+                transform: translateX(-20px) !important;
+            }
+            
+            .loading-overlay div {
+                font-size: 1.2rem !important;
+                margin-top: 15px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .loader {
+                width: 35px !important;
+                height: 35px !important;
+                transform: translateX(-17.5px) !important;
+            }
+            
+            .loading-overlay div {
+                font-size: 1rem !important;
+                margin-top: 10px !important;
             }
         }
     </style>
@@ -457,8 +586,8 @@
             <div class="result-section" id="resultSection" style="display: none;">
                 <div class="card result-card">
                     <h2>Tu creación</h2>
-                    <div class="result-image-container">
-                        <img id="resultImage" alt="Generated Image">
+                    <div class="result-image-container" style="width: 100%; display: flex; justify-content: center; align-items: center; margin: 15px 0;">
+                        <img id="resultImage" alt="Generated Image" style="max-width: 100%; max-height: 60vh; width: auto; height: auto; object-fit: contain; border-radius: 8px;">
                     </div>
                     <div class="result-actions">
                         <button class="action-btn download-btn" id="downloadBtn" onclick="descargarImagen()">
@@ -478,7 +607,10 @@
         </main>
 
         <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-           
+            <div class="loader"></div>
+            <div style="color: white; font-size: 1.5rem; margin-top: 20px; text-align: center;">
+                Generando tu figura...
+            </div>
         </div>
 
         <div class="toast" id="toast"></div>
