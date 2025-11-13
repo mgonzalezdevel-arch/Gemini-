@@ -143,15 +143,60 @@
             .name-section, .customization-section {
                 min-width: 90% !important;
                 max-width: 95% !important;
-                padding: 20px !important;
-                margin: 10px !important;
+                padding: 15px !important;
+                margin: 5px !important;
                 position: fixed !important;
                 top: 50% !important;
                 left: 50% !important;
                 transform: translate(-50%, -50%) !important;
-                max-height: 90vh !important;
+                max-height: 95vh !important;
                 overflow-y: auto !important;
                 box-sizing: border-box !important;
+            }
+            
+            /* Ajustes específicos para customization-section en móvil */
+            .customization-section {
+                min-width: 95% !important;
+                max-width: 98% !important;
+                padding: 10px !important;
+            }
+            
+            /* Ajustes para el contenido de deseos */
+            .customization-section h3 {
+                font-size: 1rem !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .customization-section p {
+                font-size: 0.8rem !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .accessory-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+            }
+            
+            .accessory-option {
+                padding: 8px !important;
+                font-size: 0.7rem !important;
+                border-radius: 8px !important;
+                text-align: center !important;
+            }
+            
+            /* Contador de accesorios en móvil */
+            .customization-section span {
+                font-size: 0.8rem !important;
+                padding: 4px 10px !important;
+            }
+            
+            /* Botón continuar en móvil */
+            #continue-photo-button {
+                padding: 10px 20px !important;
+                font-size: 0.9rem !important;
+                margin-top: 15px !important;
             }
             
             /* Ajustes específicos para el generador en móvil */
@@ -176,17 +221,6 @@
             #user-name {
                 width: 250px !important;
                 font-size: 1rem !important;
-            }
-            
-            .accessory-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
-                gap: 10px !important;
-                max-width: 100% !important;
-            }
-            
-            .accessory-option {
-                padding: 12px !important;
-                font-size: 0.8rem !important;
             }
             
             h2 {
@@ -225,12 +259,52 @@
             }
             
             .name-section, .customization-section {
-                min-width: 95% !important;
-                max-width: 98% !important;
-                padding: 15px !important;
-                max-height: 95vh !important;
+                min-width: 98% !important;
+                max-width: 99% !important;
+                padding: 8px !important;
+                max-height: 98vh !important;
                 overflow-y: auto !important;
                 box-sizing: border-box !important;
+                margin: 2px !important;
+            }
+            
+            /* Ajustes específicos para deseos en móvil pequeño */
+            .customization-section h3 {
+                font-size: 0.9rem !important;
+                margin-bottom: 5px !important;
+            }
+            
+            .customization-section p {
+                font-size: 0.7rem !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .accessory-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 6px !important;
+                max-width: 100% !important;
+            }
+            
+            .accessory-option {
+                padding: 6px !important;
+                font-size: 0.65rem !important;
+                border-radius: 6px !important;
+                min-height: 40px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            /* Contador más pequeño */
+            .customization-section span {
+                font-size: 0.7rem !important;
+                padding: 3px 8px !important;
+            }
+            
+            #continue-photo-button {
+                padding: 8px 16px !important;
+                font-size: 0.8rem !important;
+                margin-top: 10px !important;
             }
             
             /* Ajustes específicos para el generador en móvil pequeño */
