@@ -860,7 +860,7 @@
             // Limpiar nombre del usuario (remover caracteres especiales)
             const nombreLimpio = nombre.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ]/g, '_');
             
-            return `Figura_${nombreLimpio}_2026_${dia}-${mes}-${año}.png`;
+            return `Figura_${nombreLimpio}_AñoNuevo_2026_${dia}-${mes}-${año}.png`;
         }
         
         // Función para descargar la imagen con nombre personalizado
@@ -869,6 +869,11 @@
             if (!imgElement || !imgElement.src) {
                 alert('No hay imagen para descargar');
                 return;
+            }
+            
+            // Verificar que tenemos el nombre del usuario
+            if (!window.nombreUsuario) {
+                window.nombreUsuario = 'Usuario';
             }
             
             // Crear un canvas temporal para convertir la imagen
@@ -887,12 +892,13 @@
                 // Dibujar la imagen en el canvas
                 ctx.drawImage(img, 0, 0);
                 
-                // Convertir canvas a blob y descargar
+                // Convertir canvas a blob y descargar con nombre personalizado
                 canvas.toBlob(function(blob) {
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.href = url;
                     link.download = generarNombreArchivo();
+                    link.style.display = 'none';
                     
                     // Agregar el link al DOM temporalmente y hacer click
                     document.body.appendChild(link);
@@ -901,10 +907,14 @@
                     
                     // Limpiar URL temporal
                     URL.revokeObjectURL(url);
-                }, 'image/png');
+                    
+                    // Mostrar mensaje de confirmación
+                    console.log('Imagen descargada como:', generarNombreArchivo());
+                }, 'image/png', 1.0);
             };
             
             img.onerror = function() {
+                console.log('Error cargando imagen, usando método alternativo');
                 // Si hay error cargando la imagen, usar método alternativo
                 descargarImagenAlternativo();
             };
@@ -917,12 +927,17 @@
         function descargarImagenAlternativo() {
             const imgElement = document.getElementById('resultImage');
             const link = document.createElement('a');
+            
+            // Usar la imagen directamente con nombre personalizado
             link.href = imgElement.src;
             link.download = generarNombreArchivo();
+            link.style.display = 'none';
             
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            
+            console.log('Imagen descargada (método alternativo) como:', generarNombreArchivo());
         }
     </script>
 </body>
