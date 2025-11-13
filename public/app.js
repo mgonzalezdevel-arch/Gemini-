@@ -145,9 +145,17 @@ async function generateImage() {
 }
 
 function downloadImage() {
+    const nombre = window.nombreUsuario || 'Usuario';
+    const fecha = new Date();
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const año = fecha.getFullYear();
+    const nombreLimpio = nombre.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ]/g, '_');
+    const nombreArchivo = `Figura_${nombreLimpio}_AñoNuevo_2026_${dia}-${mes}-${año}.png`;
+    
     const link = document.createElement('a');
     link.href = resultImage.src;
-    link.download = `nano-banana-${Date.now()}.png`;
+    link.download = nombreArchivo;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
