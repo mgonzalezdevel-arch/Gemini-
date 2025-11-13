@@ -58,6 +58,165 @@
             color: white !important;
             border-color: #434444ff !important;
         }
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 768px) {
+            .logo-corner img {
+                width: 200px;
+                top: 10px;
+                left: 10px;
+            }
+            
+            .title {
+                font-size: 1.8rem !important;
+                margin-bottom: 40px !important;
+            }
+            
+            .avatars-container {
+                flex-direction: column !important;
+                gap: 20px !important;
+                align-items: center !important;
+            }
+            
+            .avatar img {
+                width: 120px !important;
+                height: 120px !important;
+            }
+            
+            #inicioContainer {
+                padding-top: 10vh !important;
+                padding: 20px;
+            }
+            
+            .name-section, .customization-section, .main-content {
+                min-width: 90% !important;
+                max-width: 95% !important;
+                padding: 20px !important;
+                margin: 10px !important;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+            }
+            
+            .customization-section {
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+            
+            #user-name {
+                width: 250px !important;
+                font-size: 1rem !important;
+            }
+            
+            .accessory-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+                gap: 10px !important;
+                max-width: 100% !important;
+            }
+            
+            .accessory-option {
+                padding: 12px !important;
+                font-size: 0.8rem !important;
+            }
+            
+            h2 {
+                font-size: 1.3rem !important;
+            }
+            
+            h3 {
+                font-size: 1.1rem !important;
+            }
+            
+            button {
+                padding: 10px 20px !important;
+                font-size: 1rem !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-corner img {
+                width: 150px;
+            }
+            
+            .title {
+                font-size: 1.5rem !important;
+                margin-bottom: 30px !important;
+            }
+            
+            .avatar img {
+                width: 100px !important;
+                height: 100px !important;
+            }
+            
+            .name-section, .customization-section, .main-content {
+                min-width: 95% !important;
+                padding: 15px !important;
+            }
+            
+            #user-name {
+                width: 200px !important;
+            }
+            
+            .accessory-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+            }
+            
+            .accessory-option {
+                padding: 10px !important;
+                font-size: 0.75rem !important;
+            }
+            
+            h2 {
+                font-size: 1.2rem !important;
+            }
+            
+            h3 {
+                font-size: 1rem !important;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .logo-corner img {
+                width: 250px;
+            }
+            
+            .avatars-container {
+                gap: 30px !important;
+            }
+            
+            .avatar img {
+                width: 150px !important;
+                height: 150px !important;
+            }
+            
+            .name-section, .customization-section, .main-content {
+                min-width: 500px !important;
+                max-width: 80% !important;
+            }
+            
+            .accessory-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+                max-width: 550px !important;
+            }
+        }
+        
+        /* Ajustes para orientación landscape en móviles */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #inicioContainer {
+                padding-top: 5vh !important;
+            }
+            
+            .name-section, .customization-section {
+                max-height: 95vh !important;
+                overflow-y: auto !important;
+            }
+            
+            .title {
+                margin-bottom: 20px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -102,14 +261,13 @@
         </div>
         
         <div class="customization-section" id="customization-section" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; background: rgba(255,255,255,0.9); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); min-width: 600px; max-height: 80vh; overflow-y: auto;">
-           
             
             <!-- Selección de accesorios -->
             <div id="skin-selection" style="margin-bottom: 30px;">
                 <h3 style="color: #666; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; justify-content: center;">
                     <span style="margin-right: 10px;"></span> SELECCIONA ACCESORIOS
                 </h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; max-width: 600px; margin: 0 auto;">
+                <div class="accessory-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; max-width: 600px; margin: 0 auto;">
                     <div class="accessory-option" onclick="selectAccessory('viajar')" style="padding: 15px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 15px; cursor: pointer; transition: all 0.3s ease; text-align: center; font-size: 0.9rem; color: #666;">
                         Viajar
                     </div>
